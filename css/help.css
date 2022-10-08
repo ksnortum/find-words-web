@@ -1,0 +1,37 @@
+div#main {
+	border: 1px solid black;
+	width: 600px;
+	margin: auto;
+	background-color: #f9f9f9;
+}
+
+h2 {
+    font-style: italic;
+    border-radius: 5px;
+}
+
+.emphasis {
+    font-weight: bold;
+}
+
+.quote {
+    background-color: #f0f0f0;
+    font-family: Courier, fixed;
+    font-style: italic;
+}
+
+.button {
+    background-color: #f0f0f0;
+    font-family: Courier, fixed;
+    font-size: medium;
+    border: thin solid lightgray;
+    border-radius: 5px;
+}
+
+.key {
+    background-color: #f0f0f0;
+    font-family: fixed, monospace, Courier, Courier New;
+    font-size: small;
+    border: thin solid lightgray;
+    border-radius: 5px;
+}

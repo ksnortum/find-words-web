@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find Words</title>
+    <script src="js/find-words.js"></script>
+    <link rel="stylesheet" href="css/find-words.css"/>
+    <link rel="icon" type="image/x-icon" href="images/letter-S.ico">
+</head>
+<body>
+
+<div id="main">
+
+<h1>Find Words</h1>
+
+<form id="form" autocomplete="on" action="javascript:void(0);">
+    <table>
+        <tr>
+            <td colspan="2">
+                <input type="radio" id="scrabble" name="type_of_game" value="scrabble" onclick="typeOfGameProcess()" checked>
+                <label for="scrabble">Scrabble</label>
+                <input type="radio" id="crossword" name="type_of_game" value="crossword" onclick="typeOfGameProcess()">
+                <label for="type_of_game">Crossword</label>
+                <input type="radio" id="wordle" name="type_of_game" value="wordle" onclick="typeOfGameProcess()">
+                <label for="wordle">Wordle</label>
+            </td>
+        </tr>
+
+        <tr>
+            <td><span id="letters_label">Avaliable Letters:</span></td>
+            <td><input type="text" id="letters" size="26" maxlength="26"></td>
+            <td><input type="button" id="letters_clear" value="Clear" onclick="clearLetters()"></td>
+        </tr>
+        <tr><td colspan="3"><small><span class="error" id="letters_error"></span></small></td></tr>
+
+        <tr>
+            <td>Contains Letters:</td>
+            <td><input type="text" id="contains" size="26" maxlength="26"></td>
+            <td><input type="button" value="Clear" onclick="clearContains()"></td>
+            <tr><td colspan="3"><small><span class="error" id="contains_error"></span></small></td></tr>
+        </tr>
+        <tr>
+            <td>Starts with:</td>
+            <td><input type="text" id="starts_with" size="26" maxlength="26"></td>
+            <td><input type="button" value="Clear" onclick="clearStartsWith()"></td>
+            <tr><td colspan="3"><small><span class="error" id="starts_with_error"></span></small></td></tr>
+        </tr>
+        <tr>
+            <td>Ends with:</td>
+            <td><input type="text" id="ends_with" size="26" maxlength="26"></td>
+            <td><input type="button" value="Clear" onclick="clearEndsWith()"></td>
+            <tr><td colspan="3"><small><span class="error" id="ends_with_error"></span></small></td></tr>
+        </tr>
+        <tr>
+            <td>Number of Letters:</td>
+            <td><input type="number" min=0 max=26 id="number_of_letters" disabled></td>
+            <td><input type="button" id="number_of_letters_clear" value="Clear" onclick="clearNumberOfLetters()" disabled></td>
+            <tr><td colspan="3"><small><span class="error" id="number_of_letters_error"></span></small></td></tr>
+        </tr>
+        <tr>
+            <td>Dictionary:</td>
+            <td>
+                <select id="dicts">
+                    <option name="dicts" value="ospd">OSPD</option>
+                    <option name="dicts" value="twl">TWL</option>
+                    <option name="dicts" value="words">Words</option>
+                    <option name="dicts" value="collins" selected>Collins</option>
+                    <option name="dicts" value="collins_define">Collins with definitions</option>
+                </select>
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <tr>
+            <td colspan="3">
+                <input type="submit" onclick="findWords()">
+                <button onclick="clearAll()">Clear All</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</div>
+
+<br>
+<div id="words" hidden></div>
+<br>
+
+<div id="footer">
+    Copyright &copy; 2014-2022 Knute Snortum&nbsp;
+    <a href="about.html" target="_self">About</a>&nbsp;
+    <a href="help.html" target="_self">Help</a>
+</div>
+
+</body>
+</html>

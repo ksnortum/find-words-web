@@ -1,0 +1,32 @@
+body {
+	font-family: Arial, Helvetica, san-serif;
+	background-color: darkred;
+}
+
+table {
+	margin: auto;
+}
+
+div#main {
+	border: 1px solid black;
+	padding: 0px 20px 20px 20px;
+	width: 460px;
+	margin: auto;
+	background-color: #f9f9f9;
+}
+
+div#words {
+    padding: 20px 20px 20px 20px;
+	width: 460px;
+	margin: auto;
+	background-color: #f9f9f9;
+}
+
+div#footer {
+    background-color: white;
+    padding: 5px 5px 5px 5px;
+}
+
+.error {
+    color: red;
+}
