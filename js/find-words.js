@@ -230,7 +230,7 @@ function sendData(data) {
 // in: JSON encoded array of custom words
 // out: HTML table with words inside
 function wordsToTable(text) {
-    if (text == null || text.trim() === "") {
+    if (text == null || text.trim() === "" || text.trim() === "[]") {
         return "No words were found that fit these conditions";
     }
 
