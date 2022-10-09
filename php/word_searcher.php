@@ -42,7 +42,7 @@ class WordSearcher {
         foreach ($valid_words as $element) {
             $word = $element->get_word();
 
-            if (!$this->data->typeOfGame === "crossword" && strlen($word) > strlen($search_letters) + strlen($wildcard)) {
+            if ($this->data->typeOfGame !== "crossword" && strlen($word) > strlen($search_letters) + strlen($wildcards)) {
                 continue;
             }
 
@@ -53,6 +53,12 @@ class WordSearcher {
             if (($this->data->typeOfGame === "crossword" || $this->data->typeOfGame == "wordle")
                     && trim($this->data->numberOfLetters) !== ""
                     && strlen($word) != intval($this->data->numberOfLetters)) {
+                continue;
+            }
+
+            if ($this->data->typeOfGame === "crossword") {
+                array_push($words, new CustomWord($word, "", false, $element->get_description()));
+                error_log("pushed crossword word"); // debug
                 continue;
             }
 

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 ini_set("log_errors", true);
+ini_set('error_log', "error.log");
+ // error_log("Error message"); // debug
 
 require "word_searcher.php";
 
