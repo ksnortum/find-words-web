@@ -3,6 +3,9 @@
 
 const ONLY_LETTERS_REGEX = /^[a-zA-Z]*$/;
 
+/**
+ * Validate form data, and if valid, send a JavaScript object to server.
+ */
 function findWords() {
     const form = document.getElementById('form');
     if (validate(form)) {
@@ -14,13 +17,17 @@ function findWords() {
         data.endsWith = form["ends_with"].value.trim();
         data.numberOfLetters = form["number_of_letters"].value;
         data.dict = getDictionary();
-        // console.log(data);  // TODO testing
 
         // Send data to server
         sendData(data);
     }
 }
 
+/**
+ * Takes care of all GUI changes that happen when the type of game changes.
+ * 
+ * @returns {string} type of game
+ */
 function typeOfGameProcess() {
     const typeOfGame = getTypeOfGame();
     const numOfLetters = document.getElementById("number_of_letters");
@@ -47,7 +54,6 @@ function typeOfGameProcess() {
             letters.value = "";
             letters.disabled = true;
             lettersClear.disabled = true;
-            // lettersLabel.innerHTML = "";
             break;
         case "wordle":
             numOfLetters.value = "5";
@@ -64,6 +70,12 @@ function typeOfGameProcess() {
     return typeOfGame;
 }
 
+/**
+ * Validate all input data.
+ * 
+ * @param {HTMLElement} form the HTML form
+ * @returns {boolean} did we pass validation?
+ */
 function validate(form) {
     if (getTypeOfGame() === "none") {
         return false;
@@ -90,6 +102,12 @@ function validate(form) {
     return didWePass;
 }
 
+/**
+ * Validate the endsWith value
+ * 
+ * @param {HTMLElement} form the HTML form
+ * @returns {bool} did we pass?
+ */
 function validateEndsWith(form) {
     const endsWith = form["ends_with"].value.trim();
     const contains = form["contains"].value.trim();
@@ -113,6 +131,12 @@ function validateEndsWith(form) {
     return didWePass;
 }
 
+/**
+ * Validate the startsWith input
+ * 
+ * @param {HTMLElement} form the HTML form
+ * @returns {bool} did we pass?
+ */
 function validateStartsWith(form) {
     const startsWith = form["starts_with"].value.trim();
     const contains = form["contains"].value.trim();
@@ -136,6 +160,12 @@ function validateStartsWith(form) {
     return didWePass;
 }
 
+/**
+ * Validate the "available" / "can't have" letters.
+ * 
+ * @param {HTMLElement} form the HTML form
+ * @returns {bool} did we pass?
+ */
 function validateLetters(form) {
     const letters = form["letters"].value.trim();
     const typeOfGame = getTypeOfGame();
@@ -146,8 +176,8 @@ function validateLetters(form) {
         if (letters.length < 1) {
             errorSpan.innerHTML = "You must have at least one available letter";
             didWePass = false;
-        } else if (letters.length > 20) {
-            errorSpan.innerHTML = "You cannot have over 20 letters";
+        } else if (letters.length > 26) {
+            errorSpan.innerHTML = "You cannot have over 26 letters";
             didWePass = false;
         }
     }
@@ -171,6 +201,9 @@ function validateLetters(form) {
     return didWePass;
 }
 
+/**
+ * @returns {string} the selected dictionary name, or "none".
+ */
 function getDictionary() {
     const dicts = document.querySelectorAll('option[name="dicts"]');
     let selectedDict = "none";
@@ -185,6 +218,9 @@ function getDictionary() {
     return selectedDict;
 }
 
+/**
+ * @returns {string} the type of game, or "none".
+ */
 function getTypeOfGame() {
     const typeOfGames = document.querySelectorAll('input[name="type_of_game"]');
     let selectedType = "none";
@@ -199,27 +235,25 @@ function getTypeOfGame() {
     return selectedType;
 }
 
+/**
+ * Send input data to the server as a JSON string.  Get's back an array of CustomWords.
+ * 
+ * @param {object} data all the input data
+ */
 function sendData(data) {
     const wordsDiv = document.getElementById("words");
     wordsDiv.hidden = false;
     wordsDiv.innerHTML = "Just a moment...";
     
     const xhr = new XMLHttpRequest();
-
-    // configure a POST request
     xhr.open('POST', "php/find-words.php");
-
-    // set Content-Type header
     xhr.setRequestHeader('Content-Type', 'application/json');
-
-    // pass params to send() method
     xhr.send(JSON.stringify(data));
 
     xhr.onerror = () => {
-        console.error('Request failed.');
+        alert('Request failed.');
     }
 
-    // listen for load event
     xhr.onload = () => {
         if (xhr.readyState === xhr.DONE && xhr.status === 200) {
             wordsDiv.innerHTML = wordsToTable(xhr.responseText);
@@ -227,8 +261,14 @@ function sendData(data) {
     }
 }
 
-// in: JSON encoded array of custom words
+// in: 
 // out: HTML table with words inside
+/**
+ * Format an array of CustomWords into a table with varying columns.
+ * 
+ * @param {array} text JSON encoded array of custom words
+ * @returns {string} HTML Table with words and possible values and/or descriptions
+ */
 function wordsToTable(text) {
     if (text == null || text.trim() === "" || text.trim() === "[]") {
         return "No words were found that fit these conditions";

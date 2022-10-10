@@ -5,13 +5,17 @@ declare(strict_types=1);
 require "custom_dictionary.php";
 require "custom_word.php";
 
-if (!function_exists('str_endsWith')) {
-    function str_endsWith(string $haystack, string $needle): bool {
+// Not needed?  Creates a function "str_ends_with" if this version of PHP doesn't have it
+if (!function_exists('str_ends_with')) {
+    function str_ends_with(string $haystack, string $needle): bool {
         $needle_len = strlen($needle);
         return ($needle_len === 0 || 0 === substr_compare($haystack, $needle, - $needle_len));
     }
 }
 
+/**
+ * Does all the work for searching words based on input data.
+ */
 class WordSearcher {
     private const ALL_LETTERS = "abcdefghijklmnopqrstuvwxyz";
 
@@ -21,14 +25,23 @@ class WordSearcher {
         $this->data = $data;
     }
 
+    /**
+     * The main function.  It loops through the words in a dictionary, comparing them to the parameters in the input data object.
+     * @return array of CustomWords
+     */
     public function get_words(): array {
+
+        // open a dictionary and read all its words
         $dictionary = new CustomDictionary($this->data->dict);
         $valid_words = $dictionary->get_valid_words();
+
+        // search_letters is what you'll actual use to search the words
         $contains_letters = $this->get_letters_from_contains();
         $data_letters = $this->get_valid_data_letters($contains_letters);
         $search_letters = $data_letters . $contains_letters . $this->data->startsWith . $this->data->endsWith;
         $search_letters = strtolower($search_letters);
 
+        // wildcards contains only the dots in the available letters
         $wildcards = "";
         foreach (str_split($this->data->letters) as $letter) {
             if ($letter === ".") {
@@ -36,32 +49,38 @@ class WordSearcher {
             }
         }
  
+        // build a pattern that may quickly exclude words that don't match
         $pattern = $this->build_pattern();
         $words = [];
 
+        // Loop through each dictionary word (element) and test it against the input data
         foreach ($valid_words as $element) {
             $word = $element->get_word();
 
+            // Skip, the word is longer that the characters to search for
             if ($this->data->typeOfGame !== "crossword" && strlen($word) > strlen($search_letters) + strlen($wildcards)) {
                 continue;
             }
 
+            // Skip, the word doesn't match the pattern we built.
             if (trim($pattern) !== "" && !preg_match($pattern, $word)) {
                 continue;
             }
 
+            // Skip, some of the games can use number_of_letters (word length) as a criterion 
             if (($this->data->typeOfGame === "crossword" || $this->data->typeOfGame == "wordle")
                     && trim($this->data->numberOfLetters) !== ""
                     && strlen($word) != intval($this->data->numberOfLetters)) {
                 continue;
             }
 
+            // If the game is crossword, we're done, add this word to the array
             if ($this->data->typeOfGame === "crossword") {
-                array_push($words, new CustomWord($word, "", false, $element->get_description()));
-                error_log("pushed crossword word"); // debug
+                array_push($words, new CustomWord($word, "", false, $element->get_definition()));
                 continue;
             }
 
+            // Loop through the search letters, removing any letters it finds in the copy_word
             $word_copy = $word;
             $value_letters = "";
             foreach (str_split($search_letters) as $letter) {
@@ -70,24 +89,28 @@ class WordSearcher {
                     $value_letters .= $letter;
                 }
 
+                // word_copy is empty (we found a word), we can exit
                 if (strlen($word_copy) === 0) {
                     break;
                 }
             }
 
+            // Wildcards remove *any* letter from the word_copy
             $i = 0;
             while (strlen($word_copy) != 0 && $i < strlen($wildcards)) {
                 $word_copy = substr($word_copy, 1);
                 $i++;
             }
 
+            // This word_copy is empty, so the word matches.  Check for Bingo and add to the array
             if (strlen($word_copy) == 0) {
                 $is_bingo = strlen($word) - strlen($contains_letters) - strlen($this->data->startsWith)
                         - strlen($this->data->endsWith) >= 7;
-                array_push($words, new CustomWord($word, $value_letters, $is_bingo, $element->get_description()));
+                array_push($words, new CustomWord($word, $value_letters, $is_bingo, $element->get_definition()));
             }
         }
 
+        // Scrabble sorts words by descending value, all others by ascending alphabetic order.
         if ($this->data->typeOfGame === "scrabble") {
             // Sort by value in CustomWord
             usort($words, fn($a, $b) => $b->get_value() <=> $a->get_value());
@@ -99,6 +122,16 @@ class WordSearcher {
         return $words;
     }
 
+    /**
+     * Finds letters to search for from Available Letters input. Capital letters are 
+     * removed since they have a special meaning. In the game Wordle, Available 
+     * Letters are Can't Have letters.  Use the entire alphabet and remove letters
+     * found in Can't Have.  Then the letters are tripled since you can have up to
+     * three letters that are the same.
+     * 
+     * @param string $contains_letters letters from Contains input, cleaned
+     * @return string letters to search for from Available Letters input
+     */
     private function get_valid_data_letters(string $contains_letters): string {
         $data_letters = "";
 
@@ -113,7 +146,7 @@ class WordSearcher {
             $data_letters = $this->data->letters;
         }
 
-        $data_letters = $this->remove_capitals($this->data->contains, $data_letters);
+        $data_letters = $this->remove_capitals($contains_letters, $data_letters);
         $data_letters = $this->remove_capitals($this->data->startsWith, $data_letters);
         $data_letters = $this->remove_capitals($this->data->endsWith, $data_letters);
         str_replace(".", "", $data_letters);
@@ -121,6 +154,9 @@ class WordSearcher {
         return $data_letters;
     }
 
+    /**
+     * Remove letters from data_letters that are found in word.
+     */
     private function remove_capitals(string $word, string $data_letters): string {
         foreach (str_split($word) as $letter) {
             if (ctype_upper($letter)) {
@@ -132,6 +168,9 @@ class WordSearcher {
         return $data_letters;
     }
 
+    /**
+     * Get non-escaped letters from Contains letters input, since it can contain regexps.
+     */
     private function get_letters_from_contains() {
         $is_escaped_character = false;
         $result = "";
@@ -149,6 +188,11 @@ class WordSearcher {
         return $result;
     }
 
+    /**
+     * Build a regexp from Contains, StartsWith and EndsWith letters.  This regexp
+     * is not intended to catch only the correct words, but instead to filter out
+     * words that are obviously wrong.
+     */
     private function build_pattern(): string {
         $pattern = $this->lower_case_non_escaped_letters($this->data->contains);
 
@@ -157,7 +201,7 @@ class WordSearcher {
         }
 
         if (trim($this->data->endsWith) != "") {
-            if (!str_endsWith($pattern, ".*")) {
+            if (!str_ends_with($pattern, ".*")) {
                 $pattern .= ".*";
             }
             $pattern .= strtolower($this->data->endsWith) . "$";
@@ -170,6 +214,9 @@ class WordSearcher {
         return $pattern;
     }
 
+    /**
+     * Lowercase all letters except when escaped, since the letters can be a regexp.
+     */
     private function lower_case_non_escaped_letters(string $letters): string {
         $is_escaped_character = false;
         $result = "";

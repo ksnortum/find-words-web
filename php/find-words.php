@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+// Log error to a file "error.log" in php directory
 ini_set("log_errors", true);
 ini_set('error_log', "error.log");
- // error_log("Error message"); // debug
+// Below is how you would enter a debugging message
+// error_log("Error message"); // debug
 
 require "word_searcher.php";
 

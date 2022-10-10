@@ -5,6 +5,9 @@ declare(strict_types=1);
 require "dictionary_element.php";
 require "dictionary_name.php";
 
+/**
+ * Read and cache the letters from a dictionary file.
+ */
 class CustomDictionary {
     private string $dictionary_name;
     private array $words;
@@ -14,13 +17,16 @@ class CustomDictionary {
         $this->words = [];
     }
 
+    /**
+     * Read dictionary from file or use cache if the dictionary has already been read.
+     * @return array of DictionaryElements (word and possible definition)
+     */
     public function get_valid_words(): array {
         if (array_key_exists($this->dictionary_name, $this->words)) {
             return $this->words[$this->dictionary_name];
         }
 
         $valid_words = [];
-        // This path will have to change once we are on the website, probably just /resouces/etc
         $path = "../resources/dicts/" . $this->dictionary_name . ".txt";
     	$input = fopen($path, "r") or die("Could not open ${path}");
 

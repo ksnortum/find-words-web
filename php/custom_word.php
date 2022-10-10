@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * Holds a custom word, with a value and possible definition.
+ */
 class CustomWord implements JsonSerializable {
     private const LETTER_VALUE = array(
         'a' => 1,
@@ -65,8 +68,8 @@ class CustomWord implements JsonSerializable {
         return $this->value;
     }
 
-    public function get_description(): string {
-        return $this->description;
+    public function get_definition(): string {
+        return $this->definition;
     }
 
     public function jsonSerialize() {
