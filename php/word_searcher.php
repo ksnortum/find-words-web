@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require "custom_dictionary.php";
 require "custom_word.php";
+require "type_of_game.php";
 
 // Not needed?  Creates a function "str_ends_with" if this version of PHP doesn't have it
 if (!function_exists('str_ends_with')) {
@@ -58,7 +59,7 @@ class WordSearcher {
             $word = $element->get_word();
 
             // Skip, the word is longer that the characters to search for
-            if ($this->data->typeOfGame !== "crossword" && strlen($word) > strlen($search_letters) + strlen($wildcards)) {
+            if ($this->data->typeOfGame !== TypeOfGame::CROSSWORD && strlen($word) > strlen($search_letters) + strlen($wildcards)) {
                 continue;
             }
 
@@ -68,14 +69,14 @@ class WordSearcher {
             }
 
             // Skip, some of the games can use number_of_letters (word length) as a criterion 
-            if (($this->data->typeOfGame === "crossword" || $this->data->typeOfGame == "wordle")
+            if (($this->data->typeOfGame === TypeOfGame::CROSSWORD || $this->data->typeOfGame == TypeOfGame::WORDLE)
                     && trim($this->data->numberOfLetters) !== ""
                     && strlen($word) != intval($this->data->numberOfLetters)) {
                 continue;
             }
 
             // If the game is crossword, we're done, add this word to the array
-            if ($this->data->typeOfGame === "crossword") {
+            if ($this->data->typeOfGame === TypeOfGame::CROSSWORD) {
                 array_push($words, new CustomWord($word, "", false, $element->get_definition()));
                 continue;
             }
@@ -111,7 +112,7 @@ class WordSearcher {
         }
 
         // Scrabble sorts words by descending value, all others by ascending alphabetic order.
-        if ($this->data->typeOfGame === "scrabble") {
+        if ($this->data->typeOfGame === TypeOfGame::SCABBLE) {
             // Sort by value in CustomWord
             usort($words, fn($a, $b) => $b->get_value() <=> $a->get_value());
         } else {
@@ -135,7 +136,7 @@ class WordSearcher {
     private function get_valid_data_letters(string $contains_letters): string {
         $data_letters = "";
 
-        if ($this->data->typeOfGame === "wordle") {
+        if ($this->data->typeOfGame === TypeOfGame::WORDLE) {
             foreach (str_split(self::ALL_LETTERS) as $letter) {
                 if (strpos($this->data->letters, $letter) === false) {
                     $data_letters .= $letter;
@@ -238,11 +239,11 @@ class WordSearcher {
 }
 
 // $data = new StdClass();
-// $data->typeOfGame = "crossword";
+// $data->typeOfGame = TypeOfGame::CROSSWORD;
 // $data->dict = DictionaryName::COLLINS_DEFINE;
 // $data->letters = "man";
 // $data->contains = "";
-// $data->startsWith = ""; ;
+// $data->startsWith = "";
 // $data->endsWith = "";
 // $data->numberOfLetters = "3";
 // $ws = new WordSearcher($data);
