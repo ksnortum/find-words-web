@@ -75,6 +75,11 @@ class WordSearcher {
                 continue;
             }
 
+            // If "contains" is a list of letters and not all the letters are in the word, skip
+            if (str_contains($this->data->contains, ',') && !$this->all_letters_in_word($word)) {
+                continue;
+            }
+
             // If the game is crossword, we're done, add this word to the array
             if ($this->data->typeOfGame === TypeOfGame::CROSSWORD) {
                 array_push($words, new CustomWord($word, "", false, $element->get_definition()));
@@ -170,13 +175,17 @@ class WordSearcher {
     }
 
     /**
-     * Get non-escaped letters from Contains letters input, since it can contain regexps.
+     * Get non-escaped letters from Contains letters input, since it can contain regexps or commas.
      */
     private function get_letters_from_contains() {
         $is_escaped_character = false;
         $result = "";
 
         foreach (str_split($this->data->contains) as $letter) {
+            if ($letter === ',') {
+                continue;
+            }
+
             if (!$is_escaped_character) {
                 if (preg_match("/[a-zA-Z]/", $letter) && !$is_escaped_character) {
                     $result .= $letter;
@@ -195,7 +204,12 @@ class WordSearcher {
      * words that are obviously wrong.
      */
     private function build_pattern(): string {
-        $pattern = $this->lower_case_non_escaped_letters($this->data->contains);
+        $pattern = "";
+
+        // If string contains commas, it's not a pattern, it's a list of letters
+        if (!str_contains($this->data->contains, ',')) {
+            $pattern = $this->lower_case_non_escaped_letters($this->data->contains);
+        }
 
         if (trim($this->data->startsWith) != "") {
             $pattern = "^" . strtolower($this->data->startsWith) . ".*" . $pattern;
@@ -235,6 +249,22 @@ class WordSearcher {
         }
 
         return $result;
+    }
+
+    /**
+     * Return true only if all letters in the "contains" list are in word
+     */
+    private function all_letters_in_word(string $word): bool {
+        $all_letters_in_word = true;
+
+        foreach(preg_split("/,/", $this->data->contains) as $element) {
+            if (!str_contains($word, $element)) {
+                $all_letters_in_word = false;
+                break;
+            }
+        }
+
+        return $all_letters_in_word;
     }
 }
 
