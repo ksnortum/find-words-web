@@ -261,8 +261,6 @@ function sendData(data) {
     }
 }
 
-// in: 
-// out: HTML table with words inside
 /**
  * Format an array of CustomWords into a table with varying columns.
  * 
@@ -283,7 +281,6 @@ function wordsToTable(text) {
         html += "<th>Value</th>";
     }
 
-    // if (words[0].definition != "") {
     if (dictionary.endsWith("define")) {
         html += "<th>Definition</th>";
     }
@@ -297,7 +294,6 @@ function wordsToTable(text) {
             html += "<td>" + word.value + "</td>";
         }
 
-        // if (word.definition != "") {
         if (dictionary.endsWith("define")) {
             html += "<td>" + word.definition + "</td>";
         }
