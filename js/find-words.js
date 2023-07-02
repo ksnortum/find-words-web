@@ -275,7 +275,7 @@ function wordsToTable(text) {
     const typeOfGame = getTypeOfGame();
     const dictionary = getDictionary();
     const words = JSON.parse(text);
-    let html = "<table><tr><th>Word</th>";
+    let html = "<table border=\"1\"><tr><th>Word</th>";
 
     if (typeOfGame === "scrabble") {
         html += "<th>Value</th>";
