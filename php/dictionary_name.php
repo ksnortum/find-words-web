@@ -10,6 +10,4 @@ class DictionaryName {
     public const COLLINS_DEFINE = "collins_define";
 }
 
-// print DictionaryName::OSPD;
-
 ?>

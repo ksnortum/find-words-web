@@ -268,15 +268,4 @@ class WordSearcher {
     }
 }
 
-// $data = new StdClass();
-// $data->typeOfGame = TypeOfGame::CROSSWORD;
-// $data->dict = DictionaryName::COLLINS_DEFINE;
-// $data->letters = "man";
-// $data->contains = "";
-// $data->startsWith = "";
-// $data->endsWith = "";
-// $data->numberOfLetters = "3";
-// $ws = new WordSearcher($data);
-// print_r($ws->get_words());
-
 ?>

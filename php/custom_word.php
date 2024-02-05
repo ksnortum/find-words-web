@@ -77,18 +77,4 @@ class CustomWord implements JsonSerializable {
     }
 }
 
-// // testing, remove when finished
-// $word = new CustomWord("asdf", "asdf", true, "Just letters");
-// print $word->get_value();
-// print "\n";
-
-// $arr = array(
-//     new CustomWord("a", "a", false, ""),
-//     new CustomWord("z", "z", false, ""),
-//     new CustomWord("c", "c", false, "")
-// );
-// print_r($arr);
-// sort($arr);
-// print_r($arr);
-
 ?>

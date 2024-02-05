@@ -28,7 +28,7 @@ class CustomDictionary {
 
         $valid_words = [];
         $path = "../resources/dicts/" . $this->dictionary_name . ".txt";
-    	$input = fopen($path, "r") or die("Could not open ${path}");
+    	$input = fopen($path, "r") or die("Could not open $path");
 
         while(!feof($input)) {
             $line = fgets($input);
@@ -52,9 +52,5 @@ class CustomDictionary {
         return $valid_words;
     }
 }
-
-// $cd = new CustomDictionary(DictionaryName::COLLINS);
-// $cd->get_valid_words();
-// print("fin");
 
 ?>
