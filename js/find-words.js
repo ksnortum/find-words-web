@@ -91,6 +91,10 @@ function validate(form) {
         didWePass = false;
     }
 
+    if (!validateContains(form)) {
+        didWePass = false;
+    }
+
     if (!validateStartsWith(form)) {
         didWePass = false;
     }
@@ -103,7 +107,26 @@ function validate(form) {
 }
 
 /**
+ * Validate the contains value
+ * @param {HTMLElement} form the HTML form
+ * @returns {bool} did we pass?
+ */
+function validateContains(form) {
+    const contains = form["contains"].value.trim();
+    const errorSpan = document.getElementById("contains_error");
+    let didWePass = true;
+
+    if (!isValidRegex(contains)) {
+        errorSpan.innerHTML = '"Contains" is not a valid regex'
+        didWePass = false;
+    }
+
+    return didWePass;
+}
+
+/**
  * Validate the endsWith value
+ * TODO: is this logic good?  Use if/else?
  * 
  * @param {HTMLElement} form the HTML form
  * @returns {bool} did we pass?
@@ -133,6 +156,7 @@ function validateEndsWith(form) {
 
 /**
  * Validate the startsWith input
+ * TODO: is this logic good?  Use if/else?
  * 
  * @param {HTMLElement} form the HTML form
  * @returns {bool} did we pass?
@@ -338,4 +362,13 @@ function clearAll() {
     clearEndsWith();
     clearNumberOfLetters();
     document.getElementById('words').hidden = true;
+}
+
+function isValidRegex(regexString) {
+    try {
+        new RegExp(regexString);
+        return true;
+    } catch (e) {
+        return false;
+    }
 }

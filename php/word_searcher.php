@@ -64,8 +64,14 @@ class WordSearcher {
             }
 
             // Skip, the word doesn't match the pattern we built.
-            if (trim($pattern) !== "" && !preg_match($pattern, $word)) {
-                continue;
+            // try/catch in case something goes wrong with the pattern.
+            try {
+                if (trim($pattern) !== "" && !preg_match($pattern, $word)) {
+                    continue;
+                }
+            } catch ( \Exception $e ) {
+                error_log("The pattern '" . $pattern . "' is not a valid regex."); 
+                break;
             }
 
             // Skip, some of the games can use number_of_letters (word length) as a criterion 
