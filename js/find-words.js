@@ -121,6 +121,10 @@ function validateContains(form) {
         didWePass = false;
     }
 
+    if (didWePass) {
+        errorSpan.innerHTML = "";
+    }
+
     return didWePass;
 }
 
