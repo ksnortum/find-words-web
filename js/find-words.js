@@ -200,7 +200,7 @@ function validateLetters(form) {
     const errorSpan = document.getElementById("letters_error");
     let didWePass = true;
 
-    if (typeOfGame !== "crossword") {
+    if (typeOfGame === "scrabble") {
         if (letters.length < 1) {
             errorSpan.innerHTML = "You must have at least one available letter";
             didWePass = false;
