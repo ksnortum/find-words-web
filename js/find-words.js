@@ -360,11 +360,15 @@ function clearNumberOfLetters() {
 }
 
 function clearAll() {
+    const typeOfGame = getTypeOfGame();
+
     clearLetters();
     clearContains();
     clearStartsWith();
     clearEndsWith();
-    clearNumberOfLetters();
+    if (typeOfGame !== "wordle") {
+        clearNumberOfLetters();
+    }
     document.getElementById('words').hidden = true;
 }
 
