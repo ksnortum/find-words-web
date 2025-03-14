@@ -334,40 +334,65 @@ function wordsToTable(text) {
     return html;
 }
 
-function clearLetters() {
+function onlyClearLetters() {
     document.getElementById('letters').value = '';
     document.getElementById('letters_error').innerHTML = '';
 }
 
-function clearContains() {
+function onlyClearContains() {
     document.getElementById('contains').value = '';
     document.getElementById('contains_error').innerHTML = '';
 }
 
-function clearStartsWith() {
+function onlyClearStartsWith() {
     document.getElementById('starts_with').value = '';
     document.getElementById('starts_with_error').innerHTML = '';
 }
 
-function clearEndsWith() {
+function onlyClearEndsWith() {
     document.getElementById('ends_with').value = '';
     document.getElementById('ends_with_error').innerHTML = '';
 }
 
-function clearNumberOfLetters() {
+function onlyClearNumberOfLetters() {
     document.getElementById('number_of_letters').value = '';
     document.getElementById('number_of_letters_error').innerHTML = '';
+}
+
+function clearLetters() {
+    onlyClearLetters();
+    document.getElementById('letters').focus();
+}
+
+function clearContains() {
+    onlyClearContains();
+    document.getElementById('contains').focus();
+}
+
+function clearStartsWith() {
+    onlyClearStartsWith();
+    document.getElementById('starts_with').focus();
+}
+
+function clearEndsWith() {
+    onlyClearEndsWith();
+    document.getElementById('ends_with').focus();
+}
+
+function clearNumberOfLetters() {
+    onlyClearNumberOfLetters();
+    document.getElementById('number_of_letters').focus();
 }
 
 function clearAll() {
     const typeOfGame = getTypeOfGame();
 
-    clearLetters();
-    clearContains();
-    clearStartsWith();
-    clearEndsWith();
+    onlyClearLetters();
+    onlyClearContains();
+    onlyClearStartsWith();
+    onlyClearEndsWith();
     if (typeOfGame !== "wordle") {
-        clearNumberOfLetters();
+        onlyClearNumberOfLetters();
     }
     document.getElementById('words').hidden = true;
 }
