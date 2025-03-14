@@ -9,4 +9,3 @@ I have never professionally worked with the languages used here.  This is a hobb
 * https://github.com/ksnortum/find-words-web (this site)
 * https://github.com/ksnortum/find-words-java
 * https://github.com/ksnortum/find-words-python
-* https://github.com/ksnortum/wordle-kotlin (A Wordle game)
