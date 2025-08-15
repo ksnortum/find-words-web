@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-// Log error to a file "error.log" in php directory
+// Log error to a file "error.log" in the php directory
 ini_set("log_errors", true);
 ini_set('error_log', "error.log");
 // Below is how you would enter a debugging message

@@ -264,7 +264,7 @@ function getTypeOfGame() {
 }
 
 /**
- * Send input data to the server as a JSON string.  Get's back an array of CustomWords.
+ * Send input data to the server as a JSON string.  Gets back an array of CustomWords.
  * 
  * @param {object} data all the input data
  */

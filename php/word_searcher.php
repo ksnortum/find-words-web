@@ -32,17 +32,17 @@ class WordSearcher {
      */
     public function get_words(): array {
 
-        // open a dictionary and read all its words
+        // Open a dictionary and read all its words
         $dictionary = new CustomDictionary($this->data->dict);
         $valid_words = $dictionary->get_valid_words();
 
-        // search_letters is what you'll actual use to search the words
+        // Search_letters is what you'll actual use to search the words
         $contains_letters = $this->get_letters_from_contains();
         $data_letters = $this->get_valid_data_letters($contains_letters);
         $search_letters = $data_letters . $contains_letters . $this->data->startsWith . $this->data->endsWith;
         $search_letters = strtolower($search_letters);
 
-        // wildcards contains only the dots in the available letters
+        // Wildcards contains only the dots in the available letters
         $wildcards = "";
         foreach (str_split($this->data->letters) as $letter) {
             if ($letter === ".") {
@@ -50,7 +50,7 @@ class WordSearcher {
             }
         }
  
-        // build a pattern that may quickly exclude words that don't match
+        // Build a pattern that may quickly exclude words that don't match
         $pattern = $this->build_pattern();
         $words = [];
 
@@ -58,7 +58,7 @@ class WordSearcher {
         foreach ($valid_words as $element) {
             $word = $element->get_word();
 
-            // Skip, the word is longer that the characters to search for
+            // Skip, the word is longer than the characters to search for
             if ($this->data->typeOfGame !== TypeOfGame::CROSSWORD && strlen($word) > strlen($search_letters) + strlen($wildcards)) {
                 continue;
             }
@@ -206,7 +206,7 @@ class WordSearcher {
     }
 
     /**
-     * Build a regexp from Contains, StartsWith and EndsWith letters.  This regexp
+     * Build a regexp from Contains, StartsWith, and EndsWith letters.  This regexp
      * is not intended to catch only the correct words, but instead to filter out
      * words that are obviously wrong.
      */
