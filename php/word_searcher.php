@@ -181,14 +181,15 @@ class WordSearcher {
     }
 
     /**
-     * Get non-escaped letters from Contains letters input, since it can contain regexps or commas.
+     * Get non-escaped letters from Contains letters input, since it can contain
+     * regexps or commas or whitespace.
      */
     private function get_letters_from_contains() {
         $is_escaped_character = false;
         $result = "";
 
         foreach (str_split($this->data->contains) as $letter) {
-            if ($letter === ',') {
+            if ($letter === ',' || preg_match("/\s/", $letter)) {
                 continue;
             }
 
@@ -263,7 +264,7 @@ class WordSearcher {
     private function all_letters_in_word(string $word): bool {
         $all_letters_in_word = true;
 
-        foreach(preg_split("/,/", $this->data->contains) as $element) {
+        foreach(preg_split("/,\s*/", $this->data->contains) as $element) {
             if (!str_contains($word, $element)) {
                 $all_letters_in_word = false;
                 break;
